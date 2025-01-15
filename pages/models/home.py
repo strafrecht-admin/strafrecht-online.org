@@ -1,10 +1,16 @@
 from django.db import models
 
 # Wagtail
-from wagtail.core import blocks, fields
-from wagtail.core.models import Page
+from wagtail.core.blocks import StreamBlock, StructBlock, RichTextBlock, CharBlock
 from wagtail.core.fields import StreamField
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, FieldRowPanel, MultiFieldPanel
+from wagtail.core.models import Page
+from wagtail.admin.edit_handlers import (
+    FieldPanel, 
+    FieldRowPanel, 
+    MultiFieldPanel
+)
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.images.models import Image
 
 # 3rd Party
 from wagtailcolumnblocks.blocks import ColumnsBlock
@@ -24,14 +30,10 @@ from pages.models.sidebar import (
 )
 from wagtail.contrib.table_block.blocks import TableBlock
 
-from wagtail.images.models import Image
-from wagtail.images.edit_handlers import ImageChooserPanel
-from wagtail.admin.edit_handlers import FieldPanel
-
 
 
     # Content Blocks
-class HomeNewsBlock(blocks.StructBlock):
+class HomeNewsBlock(StructBlock):
     class Meta:
         template = 'blocks/widgets/news_block.html'
 
@@ -41,37 +43,37 @@ class HomeNewsBlock(blocks.StructBlock):
         #ctx['articles'] = []#NewsItem.objects.all()[0:4]
         return ctx
 
-class HomeJurcoachBlock(blocks.StructBlock):
+class HomeJurcoachBlock(StructBlock):
     class Meta:
         template = 'blocks/widgets/home_jurcoach.html'
 
 
-class CollapseBlock(blocks.StructBlock):
-    heading = blocks.CharBlock(required=True)
-    content = blocks.RichTextBlock(label="Formatierter Text")
+class CollapseBlock(StructBlock):
+    heading = CharBlock(required=True)
+    content = RichTextBlock(label="Formatierter Text")
     class Meta:
         icon = 'fa-compress'
         template = 'blocks/sidebar/collapsible.html'
         label = 'Ausklappbares Element'
 
-class FlipcardBlock(blocks.StructBlock):
-    front = blocks.RichTextBlock(label="Vorderseite")
-    back = blocks.RichTextBlock(label="Rückseite")
+class FlipcardBlock(StructBlock):
+    front = RichTextBlock(label="Vorderseite")
+    back = RichTextBlock(label="Rückseite")
     class Meta:
         icon = 'fa-graduation-cap'
         template = 'blocks/widgets/flipcard.html'
         label = 'Flipcard'
 
 # Sidebar Blocks
-class ContentBlocks(blocks.StreamBlock):
-    richtext = blocks.RichTextBlock(label="Formatierter Text")
+class ContentBlocks(StreamBlock):
+    richtext = RichTextBlock(label="Formatierter Text")
     collapse_block = CollapseBlock(label="Ausklappbares Element")
     flipcard_block = FlipcardBlock(label="Flipcard")
     home_news_block = HomeNewsBlock(label="Vier letzte News-Beiträge")
     home_jurcoach_block = HomeJurcoachBlock(label="Jurcoach-Startseiten-Widget")
     table = TableBlock()
 
-class SidebarBlocks(blocks.StreamBlock):
+class SidebarBlocks(StreamBlock):
     sidebar_title = SidebarTitleBlock(label="Grau unterlegte Überschrift")
     sidebar_simple = SidebarSimpleBlock(label="Schlichter Text")
     sidebar_border = SidebarBorderBlock(label="Grau umrandeter Kasten")
@@ -138,7 +140,7 @@ class BasePage(Page):
     content_panels = [
         FieldPanel('title'),
         FieldPanel('allow_comments'),
-        ImageChooserPanel('header'),
+        FieldPanel('header'),
         FieldRowPanel([
             FieldPanel('content', classname='col8'),
             FieldPanel('sidebar', classname='col4'),

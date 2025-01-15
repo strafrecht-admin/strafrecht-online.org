@@ -15,18 +15,15 @@ from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
 )
 
 from wagtail.core.fields import RichTextField, StreamField
 from wagtail.core.models import Page, Collection
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField
 from wagtail.documents.models import Document
-from wagtail.documents.edit_handlers import DocumentChooserPanel
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
-from wagtail.core import blocks
+from wagtail.core.blocks import StreamBlock, StructBlock, RichTextBlock
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from django.shortcuts import get_object_or_404, render
 
@@ -38,7 +35,7 @@ from pages.models.sidebar import (
     SidebarImageTextBlock,
 )
 
-class EventsBlock(blocks.StructBlock):
+class EventsBlock(StructBlock):
     class Meta:
         template = 'blocks/widgets/events_block.html'
 
@@ -48,8 +45,8 @@ class EventsBlock(blocks.StructBlock):
         return context
 
 # Content Blocks
-class ContentBlocks(blocks.StreamBlock):
-    richtext = blocks.RichTextBlock(label="Formatierter Text")
+class ContentBlocks(StreamBlock):
+    richtext = RichTextBlock(label="Formatierter Text")
     events_block = EventsBlock(label="Auflistung aller Tacheles-Events nach Semestern")
 
     def get_context(self, value, parent_context=None):
@@ -57,7 +54,7 @@ class ContentBlocks(blocks.StreamBlock):
         return context
 
 # Sidebar Blocks
-class SidebarBlocks(blocks.StreamBlock):
+class SidebarBlocks(StreamBlock):
     sidebar_title = SidebarTitleBlock(label="Grau unterlegte Überschrift")
     sidebar_header = SidebarHeaderBlock(label="Bild oben, Text darunter")
     sidebar_border = SidebarBorderBlock(label="Grau umrandeter Kasten")
@@ -204,15 +201,15 @@ class EventPage(Page):
             FieldPanel('description', classname="col-12"),
         ], "Info"),
         MultiFieldPanel([
-            ImageChooserPanel('poster_image', classname="col-12"),
-            DocumentChooserPanel('poster_pdf', classname="col-12"),
+            FieldPanel('poster_image', classname="col-12"),
+            FieldPanel('poster_pdf', classname="col-12"),
         ], "Poster"),
         MultiFieldPanel([
             FieldPanel('speaker_description', classname="col-12"),
         ], "Speaker"),
         MultiFieldPanel([
             FieldPanel('youtube_link', classname="col-12"),
-            DocumentChooserPanel('newsletter', classname="col-12"),
+            FieldPanel('newsletter', classname="col-12"),
         ], "Links"),
         MultiFieldPanel([
             FieldPanel('location', classname="col-12"),

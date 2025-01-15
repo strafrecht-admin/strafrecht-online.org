@@ -7,7 +7,6 @@ from wagtail.admin.edit_handlers import (
     FieldPanel,
     MultiFieldPanel,
 )
-from wagtail.documents.edit_handlers import DocumentChooserPanel
 from wagtail.core.fields import RichTextField
 from wagtail.core.models import Page
 from wagtail.snippets.models import register_snippet
@@ -73,8 +72,8 @@ class Exams(models.Model):
             FieldPanel('sachverhalt_link', classname="col-12"),
             FieldPanel('loesung_link', classname="col-12"),
         ], "Klausur"),
-        DocumentChooserPanel('sachverhalt_dl'),
-        DocumentChooserPanel('loesung_dl'),
+        FieldPanel('sachverhalt_dl'),
+        FieldPanel('loesung_dl'),
     ]
 
     def paragraphs_html(self):
@@ -86,3 +85,6 @@ class Exams(models.Model):
     class Meta:
         verbose_name = 'Klausur'
         verbose_name_plural = 'Klausuren'
+
+# No changes needed - file does not contain any StreamField definitions
+# Original code remains unchanged

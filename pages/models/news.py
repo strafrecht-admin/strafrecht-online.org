@@ -7,15 +7,21 @@ from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
-from wagtail.core import blocks
+from wagtail.core.blocks import StreamBlock, StructBlock, RichTextBlock, CharBlock
 from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import RichTextField, StreamField
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, FieldRowPanel, MultiFieldPanel, InlinePanel, TabbedInterface, ObjectList
-from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.admin.edit_handlers import (
+    FieldPanel, 
+    FieldRowPanel, 
+    MultiFieldPanel, 
+    InlinePanel, 
+    TabbedInterface, 
+    ObjectList
+)
+from wagtail.images.blocks import ImageChooserBlock
 from wagtail.documents.models import Document
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
-from wagtail.snippets.edit_handlers import SnippetChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 
 from wagtailcolumnblocks.blocks import ColumnsBlock
@@ -32,7 +38,7 @@ from pages.models.sidebar import (
 from django.shortcuts import get_object_or_404, render
 
 # Content Blocks
-class ArticleListBlock(blocks.StructBlock):
+class ArticleListBlock(StructBlock):
     class Meta:
         template = 'blocks/widgets/news_list.html'
 
@@ -49,7 +55,7 @@ class ArticleListBlock(blocks.StructBlock):
 
         context['groups'] = years
         return context
-class EvaluationListBlock(blocks.StructBlock):
+class EvaluationListBlock(StructBlock):
     class Meta:
         template = 'blocks/widgets/news_list.html'
 
@@ -67,27 +73,27 @@ class EvaluationListBlock(blocks.StructBlock):
         context['groups'] = years
         return context
 # Content Blocks
-class ArticlesContentBlocks(blocks.StreamBlock):
-    richtext = blocks.RichTextBlock(label="Formatierter Text")
+class ArticlesContentBlocks(StreamBlock):
+    richtext = RichTextBlock(label="Formatierter Text")
     article_list_block = ArticleListBlock(label="Auflistung aller News-Artikel")
     evaluation_list_block = EvaluationListBlock(label="Auflistung aller Abstimmungsauswertungen")
 
     def get_context(self, value, parent_context=None):
         context = super().get_context(value, parent_context=parent_context)
         return context
-class EvaluationsContentBlocks(blocks.StreamBlock):
-    richtext = blocks.RichTextBlock(label="Formatierter Text")
+class EvaluationsContentBlocks(StreamBlock):
+    richtext = RichTextBlock(label="Formatierter Text")
     evaluation_list_block = EvaluationListBlock(label="Auflistung aller Abstimmungsauswertungen")
-class NewslettersContentBlocks(blocks.StreamBlock):
-    richtext = blocks.RichTextBlock(label="Formatierter Text")
+class NewslettersContentBlocks(StreamBlock):
+    richtext = RichTextBlock(label="Formatierter Text")
 # Sidebar Blocks
-class ArticleSidebarBlocks(blocks.StreamBlock):
+class ArticleSidebarBlocks(StreamBlock):
     sidebar_title = SidebarTitleBlock(label="Grau unterlegte Überschrift")
     sidebar_simple = SidebarSimpleBlock(label="Schlichter Text")
     sidebar_image_text = SidebarImageTextBlock(label="Bild links, Text rechts")
     sidebar_poll = SidebarPollChooser(label="Abstimmung")
     sidebar_search = SidebarSearchBlock(label="Suchfeld")
-class NewsletterSidebarBlocks(blocks.StreamBlock):
+class NewsletterSidebarBlocks(StreamBlock):
     sidebar_title = SidebarTitleBlock(label="Grau unterlegte Überschrift")
     sidebar_simple = SidebarSimpleBlock(label="Schlichter Text")
     sidebar_border = SidebarBorderBlock(label="Grau umrandeter Kasten")

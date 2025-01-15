@@ -1,6 +1,6 @@
 from django.utils.html import format_html
 from django.templatetags.static import static
-from wagtail.admin.rich_text.converters.html_to_contentstate import InlineStyleElementHandler, BlockElementHandler, InlineEntityElementHandler
+from wagtail.admin.rich_text.converters.contentstate_models import Block, InlineStyleRange
 from wagtail.core import hooks
 from wagtail.contrib.modeladmin.options import (
     ModelAdmin, ModelAdminGroup, modeladmin_register
@@ -89,11 +89,11 @@ def register_roofline_feature(features):
     }
 
     features.register_editor_plugin(
-        'draftail', feature_name, draftail_features.BlockFeature(control, css={'all': ['admin/css/base.css']})
+        'draftail', feature_name, draftail_features.BlockFeature(control)
     )
 
     features.register_converter_rule('contentstate', feature_name, {
-        'from_database_format': {'p[class=roofline]': BlockElementHandler(type_)},
+        'from_database_format': {'p[class=roofline]': Block(type_)},
         'to_database_format': {'block_map': {type_: {'element': 'p', 'props': {'class': 'roofline'}}}},
     })
 
@@ -112,11 +112,11 @@ def register_revised_label_feature(features):
     }
 
     features.register_editor_plugin(
-        'draftail', feature_name, draftail_features.BlockFeature(control, css={'all': ['admin/css/base.css']})
+        'draftail', feature_name, draftail_features.BlockFeature(control)
     )
 
     features.register_converter_rule('contentstate', feature_name, {
-        'from_database_format': {'p[label revised]': BlockElementHandler(type_)},
+        'from_database_format': {'p[label revised]': Block(type_)},
         'to_database_format': {'block_map': {type_: {'element': 'div', 'props': {'class': 'label revised'}}}},
     })
 
@@ -135,11 +135,11 @@ def register_new_label_feature(features):
     }
 
     features.register_editor_plugin(
-        'draftail', feature_name, draftail_features.BlockFeature(control, css={'all': ['admin/css/base.css']})
+        'draftail', feature_name, draftail_features.BlockFeature(control)
     )
 
     features.register_converter_rule('contentstate', feature_name, {
-        'from_database_format': {'p[class=label new]': BlockElementHandler(type_)},
+        'from_database_format': {'p[class=label new]': Block(type_)},
         'to_database_format': {'block_map': {type_: {'element': 'div', 'props': {'class': 'label new'}}}},
     })
 
@@ -162,8 +162,8 @@ def register_underline_feature(features):
     )
 
     features.register_converter_rule('contentstate', feature_name, {
-        'from_database_format': {'span[style="text-decoration: underline"]': InlineStyleElementHandler(type_)},
-        'to_database_format': {'block_map': {type_: {'element': 'div', 'props': {'class': 'underline'}}}},
+        'from_database_format': {'span[style="text-decoration: underline"]': InlineStyleRange(type_)},
+        'to_database_format': {'style_map': {type_: {'element': 'span', 'props': {'style': 'text-decoration: underline'}}}},
     })
 
     features.default_features.append('underline')

@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 
 from modelcluster.fields import ParentalKey
@@ -14,19 +14,16 @@ from wagtail.admin.edit_handlers import (
     InlinePanel,
     MultiFieldPanel,
     PageChooserPanel,
-    StreamFieldPanel,
+    TabbedInterface,
+    ObjectList,
 )
-
-from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core.fields import StreamField, RichTextField
 from wagtail.core.models import Page, Collection
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField
-from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel, FieldRowPanel, MultiFieldPanel, InlinePanel, TabbedInterface, ObjectList
-from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
-from wagtail.core import blocks
+from wagtail.core.blocks import StreamBlock, StructBlock, RichTextBlock, ChoiceBlock
 from wagtail.snippets.models import register_snippet
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
-from django.shortcuts import get_object_or_404, render
 
 from pages.models.sidebar import (
     SidebarSimpleBlock,
@@ -37,7 +34,7 @@ from pages.models.sidebar import (
 )
 
 # Blocks
-class SemesterBlock(blocks.StructBlock):
+class SemesterBlock(StructBlock):
     SEMESTER_TYPE_CHOICES = [
         ('ss-2022', 'Sommersemester 2022'),
         ('ws-2022', 'Wintersemester 2022'),
@@ -51,7 +48,7 @@ class SemesterBlock(blocks.StructBlock):
         ('ws-2018', 'Wintersemester 2018'),
     ]
 
-    semester = blocks.ChoiceBlock(SEMESTER_TYPE_CHOICES, icon='calendar')
+    semester = ChoiceBlock(SEMESTER_TYPE_CHOICES, icon='calendar')
 
     class Meta:
         template = 'blocks/widgets/semester_block.html'
@@ -64,8 +61,8 @@ class SemesterBlock(blocks.StructBlock):
         return context
 
 # Content Blocks
-class ContentBlocks(blocks.StreamBlock):
-    richtext = blocks.RichTextBlock(label="Formatierter Text")
+class ContentBlocks(StreamBlock):
+    richtext = RichTextBlock(label="Formatierter Text")
     semester_block = SemesterBlock(label="Auflistung der Lehrveranstaltungen für ein bestimmtes Semester")
 
     def get_context(self, value, parent_context=None):
@@ -73,7 +70,7 @@ class ContentBlocks(blocks.StreamBlock):
         return context
 
 # Sidebar Blocks
-class SidebarBlocks(blocks.StreamBlock):
+class SidebarBlocks(StreamBlock):
     sidebar_title = SidebarTitleBlock(label="Grau unterlegte Überschrift")
     sidebar_header = SidebarHeaderBlock(label="Bild oben, Text darunter")
     sidebar_border = SidebarBorderBlock(label="Grau umrandeter Kasten")
@@ -159,7 +156,7 @@ class SessionPage(Page):
         ('ss-2019', 'Sommersemester 2019'),
         ('ws-2019', 'Wintersemester 2019'),
         ('ss-2018', 'Sommersemester 2018'),
-        ('ws-2018', 'Sommersemester 2018'),
+        ('ws-2018', 'Wintersemester 2018'),
         ('ss-2017', 'Sommersemester 2017'),
         ('ws-2017', 'Wintersemester 2017'),
         ('ss-2016', 'Sommersemester 2016'),

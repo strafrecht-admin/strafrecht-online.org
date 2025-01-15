@@ -96,8 +96,7 @@ INSTALLED_APPS = [
     'wagtail.contrib.redirects',
     'wagtail.contrib.routable_page',
     'wagtail.contrib.table_block',
-    # not available in wagtail 2.13
-    # 'wagtail.contrib.typed_table_block',
+    'wagtail.contrib.modeladmin',
     'wagtail.embeds',
     'wagtail.sites',
     'wagtail.users',
@@ -165,7 +164,6 @@ INSTALLED_APPS = [
 
     # Wagtail Polls
     'wagtailpolls',
-    'wagtail.contrib.modeladmin',
     'wagtailstreamforms',
     'treemodeladmin',
 
@@ -192,7 +190,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
     #'livereload.middleware.LiveReloadScript',
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
